@@ -24,22 +24,22 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // 서블릿 컨텐스트 경로에서 정적 자원 제공
+//        // 서블릿 컨텐스트 경로에서 정적 자원 제공
 //        registry.addResourceHandler("/assets/**").addResourceLocations("assets/");
-
-        // 파일 경로에서 정적 자원 제공
+//
+//        // 파일 경로에서 정적 자원 제공
 //        registry.addResourceHandler("/assets/**")
 //                .addResourceLocations("file:/workspace/todos/files/assets/");
-
-        // 클래스패스 경로에서 정적 자원 제공
+//
+//        // 클래스패스 경로에서 정적 자원 제공
 //        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:assets/");
-
-        registry.addResourceHandler("/assets/**")
-                .addResourceLocations(
-                        "assets/",
-                        "file:/workspace/todos/files/assets/",
-                        "classpath:assets/"
-                );
+//
+//        registry.addResourceHandler("/assets/**")
+//                .addResourceLocations(
+//                        "assets/",
+//                        "file:/workspace/todos/files/assets/",
+//                        "classpath:assets/"
+//                );
     }
 
     @Override
