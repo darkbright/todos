@@ -1,5 +1,6 @@
 site:
-  author: Darkbright!
+  author: Darkbright
+  description: What are your plans today?
 
 logging:
   level:

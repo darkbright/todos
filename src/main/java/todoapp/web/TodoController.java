@@ -17,21 +17,19 @@ public class TodoController {
 
     private Environment environment;
     private String siteAuthor;
+    private SiteProperties siteProperties;
 
-    public TodoController(Environment environment, @Value("${site.author}") String siteAuthor) {
+    public TodoController(Environment environment, @Value("${site.author}") String siteAuthor, SiteProperties siteProperties) {
         this.environment = environment;
         this.siteAuthor = siteAuthor;
+        this.siteProperties = siteProperties;
     }
 
     @RequestMapping("/todos")
     public ModelAndView todos() {
-        SiteProperties site = new SiteProperties();
-//        site.setAuthor(environment.getProperty("site.author"));
-        site.setAuthor(siteAuthor);
-        site.setDescription("스프링 MVC");
 
         ModelAndView mav = new ModelAndView();
-        mav.addObject("site", site);
+        mav.addObject("site", siteProperties);
         mav.setViewName("todos");
 
         return mav;
