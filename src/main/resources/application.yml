@@ -1,3 +1,6 @@
+site:
+  author: Darkbright!
+
 logging:
   level:
     todoapp: debug
