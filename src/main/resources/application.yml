@@ -1,3 +1,7 @@
+todos:
+  data:
+    :initialize: true
+
 site:
   author: Darkbright
   description: What are your plans today?
