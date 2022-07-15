@@ -32,16 +32,32 @@ public class TodoRestController {
 
     @PostMapping(path = "/api/todos")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody @Valid CreateTodoCommand command) {
+    public void create(@RequestBody @Valid TodoRestController.WriteTodoCommand command) {
         logger.debug("디버그: request payload: {}", command);
 
         editor.create(command.getTitle());
     }
 
-    static class CreateTodoCommand {
+    @PutMapping(path = "/api/todos/{id}")
+    public void update(@PathVariable("id") Long id, @RequestBody @Valid WriteTodoCommand command) {
+        logger.debug("디버그: request update id: {}, command: {}", id, command);
+
+        editor.update(id, command.getTitle(), command.isCompleted());
+    }
+
+    static class WriteTodoCommand {
         @NotBlank
         @Size(min = 4, max = 140)
         private String title;
+        private boolean completed;
+
+        public boolean isCompleted() {
+            return completed;
+        }
+
+        public void setCompleted(boolean completed) {
+            this.completed = completed;
+        }
 
         public String getTitle() {
             return title;
@@ -53,7 +69,7 @@ public class TodoRestController {
 
         @Override
         public String toString() {
-            return super.toString();
+            return String.format("[title=%s, completed=%s]", title, completed);
         }
     }
 
