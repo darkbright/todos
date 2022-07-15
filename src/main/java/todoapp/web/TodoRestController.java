@@ -14,6 +14,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/todos")
 public class TodoRestController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -25,12 +26,12 @@ public class TodoRestController {
         this.editor = editor;
     }
 
-    @GetMapping("/api/todos")
+    @GetMapping
     public List<Todo> list() {
         return finder.getAll();
     }
 
-    @PostMapping(path = "/api/todos")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody @Valid TodoRestController.WriteTodoCommand command) {
         logger.debug("디버그: request payload: {}", command);
@@ -38,14 +39,14 @@ public class TodoRestController {
         editor.create(command.getTitle());
     }
 
-    @PutMapping(path = "/api/todos/{id}")
+    @PutMapping(path = "/{id}")
     public void update(@PathVariable("id") Long id, @RequestBody @Valid WriteTodoCommand command) {
         logger.debug("디버그: request update id: {}, command: {}", id, command);
 
         editor.update(id, command.getTitle(), command.isCompleted());
     }
 
-    @DeleteMapping(path = "/api/todos/{id}")
+    @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable("id") Long id) {
         logger.debug("디버그: request delete id: {}", id);
 
