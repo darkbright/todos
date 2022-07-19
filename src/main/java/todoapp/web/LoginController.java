@@ -10,11 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.view.RedirectView;
 import todoapp.core.user.application.UserPasswordVerifier;
 import todoapp.core.user.application.UserRegistration;
 import todoapp.core.user.domain.User;
@@ -68,6 +67,12 @@ public class LoginController {
         userSessionRepository.set(new UserSession(user));
 
         return "redirect:/todos";
+    }
+
+    @RequestMapping("/logout")
+    public View logout() {
+        userSessionRepository.clear();
+        return new RedirectView("/todos");
     }
 
     /*
