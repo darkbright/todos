@@ -1,23 +1,21 @@
 todos:
   data:
-    :initialize: true
+    initialize: true
 
 site:
-  author: Darkbright
-  description: What are your plans today?
+  author: SpringRunner
+  description: What're your plans today?
 
 server:
+  error:
+    include-message: always
+    include-binding-errors: always
   servlet:
     encoding:
       charset: utf-8
       force: true
-  error:
-    include-message: always
-    include-binding-errors: always
 
 logging:
   level:
     todoapp: debug
-    org.springframework.beans: debug
-    org.springframework.web: trace
-
+    org.springframework.web: debug

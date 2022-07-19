@@ -1,25 +1,27 @@
 package todoapp.commons.web.error;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
-import todoapp.core.todos.domain.TodoEntityNotFoundException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * 스프링부트에 기본 구현체인 {@link DefaultErrorAttributes}에 message 속성을 덮어쓰기 할 목적으로 작성한 컴포넌트이다.
@@ -33,14 +35,13 @@ import java.util.Objects;
 public class ReadableErrorAttributes implements ErrorAttributes, HandlerExceptionResolver, Ordered {
 
     private final DefaultErrorAttributes delegate = new DefaultErrorAttributes();
+    private final MessageSource messageSource;
     private final Logger log = LoggerFactory.getLogger(ReadableErrorAttributes.class);
 
-    private final MessageSource messageSource;
-
     public ReadableErrorAttributes(MessageSource messageSource) {
-        this.messageSource = messageSource;
+        this.messageSource = Objects.requireNonNull(messageSource);
     }
-
+    
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
         Map<String, Object> attributes = delegate.getErrorAttributes(webRequest, options);
@@ -49,11 +50,33 @@ public class ReadableErrorAttributes implements ErrorAttributes, HandlerExceptio
         log.debug("errorAttributes: {}, error: {}", attributes, error);
 
         if (Objects.nonNull(error)) {
-            String errorCode = String.format("Exception.%s", error.getClass().getSimpleName());
-            String errorMessage = messageSource.getMessage(
-                    errorCode, new Object[0], error.getMessage(), webRequest.getLocale());
-
+            /*
+            if (error instanceof TodoEntityNotFoundException) {
+                attributes.put("message", "요청한 할 일을 찾을 수 없어요.");   
+            } else if (error instanceof MethodArgumentNotValidException) {
+                attributes.put("message", "입력 값이 없거나 올바르지 않아요.");
+            }
+            */
+            
+            String errorMessage = error.getMessage();
+            if (MessageSourceResolvable.class.isAssignableFrom(error.getClass())) {                
+                errorMessage = messageSource.getMessage((MessageSourceResolvable) error, webRequest.getLocale());
+            } else {
+                String errorCode = String.format("Exception.%s", error.getClass().getSimpleName());
+                errorMessage = messageSource.getMessage(errorCode, new Object[0], errorMessage, webRequest.getLocale());
+            }
             attributes.put("message", errorMessage);
+            
+            BindingResult bindingResult = extractBindingResult(error);
+            if (Objects.nonNull(bindingResult)) {
+                List<String> errors = bindingResult
+                        .getAllErrors()
+                        .stream()
+                        .map(oe -> messageSource.getMessage(oe, webRequest.getLocale()))
+                        .collect(Collectors.toList());
+
+                attributes.put("errors", errors);
+            }
         }
 
         return attributes;
