@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
+import todoapp.core.todos.domain.TodoEntityNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,8 +41,11 @@ public class ReadableErrorAttributes implements ErrorAttributes, HandlerExceptio
         log.debug("errorAttributes: {}, error: {}", attributes, error);
 
         if (Objects.nonNull(error)) {
-            // TODO attributes, error 을 사용해 message 속성을 읽기 좋은 문구로 가공한다.
-            // TODO ex) attributes.put("message", "문구");
+            if (error instanceof TodoEntityNotFoundException) {
+                attributes.put("message", "요청한 할일을 찾을 수 없어요.");
+            } else if (error instanceof MethodArgumentNotValidException) {
+                attributes.put("message", "입력 값이 없거나 올바르지 않아요.");
+            }
         }
 
         return attributes;
