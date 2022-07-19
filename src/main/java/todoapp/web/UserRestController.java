@@ -23,8 +23,7 @@ public class UserRestController {
     }
 
     @GetMapping("/api/user/profile")
-    public ResponseEntity<UserProfile> userProfile() {
-        UserSession userSession = userSessionRepository.get();
+    public ResponseEntity<UserProfile> userProfile(UserSession userSession) {
         if (Objects.nonNull(userSession)) {
             return ResponseEntity.ok(new UserProfile(userSession.getUser()));
         }
