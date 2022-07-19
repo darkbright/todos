@@ -11,6 +11,9 @@ server:
     encoding:
       charset: utf-8
       force: true
+  error:
+    include-message: always
+    include-binding-errors: always
 
 logging:
   level:
