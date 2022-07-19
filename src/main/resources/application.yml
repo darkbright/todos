@@ -6,6 +6,12 @@ site:
   author: Darkbright
   description: What are your plans today?
 
+server:
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+
 logging:
   level:
     todoapp: debug
