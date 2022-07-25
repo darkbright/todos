@@ -1,10 +1,9 @@
 todos:
-  data:
-    initialize: true
   feature:
     toggles:
       auth: true
-      onlineUsersCounter: false
+  data:
+    initialize: true
 
 site:
   author: SpringRunner

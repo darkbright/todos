@@ -24,9 +24,9 @@ public class UserSessionHandlerMethodArgumentResolver implements HandlerMethodAr
 
     @Override
     public Object resolveArgument(
-            MethodParameter parameter,
+            MethodParameter parameter, 
             ModelAndViewContainer mavContainer,
-            NativeWebRequest webRequest,
+            NativeWebRequest webRequest, 
             WebDataBinderFactory binderFactory) throws Exception {
         return sessionRepository.get();
     }
